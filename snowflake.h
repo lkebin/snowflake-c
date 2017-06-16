@@ -1,9 +1,3 @@
-#include <stdio.h>
-#include <errno.h>
-#include <sys/time.h>
-#include <limits.h>
-#include <stdlib.h>
-#include <string.h>
 #include <stdint.h>
 
 #define START_TIMESTAMP 1497453478000

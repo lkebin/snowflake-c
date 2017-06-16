@@ -1,8 +1,11 @@
-#include "snowflake.h"
+#include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdio.h>
+#include <string.h>
+#include <errno.h>
 #include <libgearman/gearman.h>
+
+#include "snowflake.h"
 
 struct Config {
     int datacenter;
@@ -60,7 +63,17 @@ int main(int argc, char *argv[])
         }
     }
 
-    printf("Job Server: %s, Port: %d, Datacenter: %d, Machine: %d\n", config.host, config.port, config.datacenter, config.machine);
+    fprintf(stdout, "Job Server: %s, Port: %d, Datacenter: %d, Machine: %d\n", config.host, config.port, config.datacenter, config.machine);
+
+    if (config.datacenter > MAX_DATACENTER_NUM) {
+        fprintf(stderr, "Datacenter value too big, the max value is %d\n", MAX_DATACENTER_NUM);
+        return EXIT_FAILURE;
+    }
+
+    if (config.machine > MAX_MACHINE_NUM) {
+        fprintf(stderr, "Machine value too big, the max value is %d\n", MAX_MACHINE_NUM);
+        return EXIT_FAILURE;
+    }
 
     gearman_worker_st worker;
     gearman_worker_create(&worker);

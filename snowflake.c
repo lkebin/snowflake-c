@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/time.h>
+
 #include "snowflake.h"
 
 #define START_TIMESTAMP 1497453478000
@@ -23,10 +28,12 @@ uint64_t snowflake_id(int datacenter, int machine)
 {/*{{{*/
     if (datacenter > MAX_DATACENTER_NUM) {
         fprintf(stderr, "Datacenter value too big, the max value is %d\n", MAX_DATACENTER_NUM);
+        return 0;
     }
 
     if (machine > MAX_MACHINE_NUM) {
         fprintf(stderr, "Machine value too big, the max value is %d\n", MAX_MACHINE_NUM);
+        return 0;
     }
 
     uint64_t current_timestamp = snowflake_timestamp();
