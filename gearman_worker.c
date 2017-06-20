@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
                 config.machine = atoi(optarg);
                 break;
             default:
-                fprintf(stderr, "Usage: %s -h [-p port] [-d datacenter] [-m machine] \n", argv[0]);
+                fprintf(stderr, "Usage: %s -h host [-p port] [-d datacenter] [-m machine] \n", argv[0]);
                 return EXIT_FAILURE;
         }
     }
