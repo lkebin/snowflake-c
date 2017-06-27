@@ -1,4 +1,10 @@
+#ifndef SNOWFLAKE_H
+#define SNOWFLAKE_H
+
+#include <stdio.h>
+#include <sys/time.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #define START_TIMESTAMP 1497453478000
 
@@ -16,3 +22,12 @@
 
 uint64_t snowflake_id();
 uint64_t snowflake_timestamp();
+
+struct snowflake_st {
+    uint64_t last_timestamp;
+    int datacenter;
+    int machine;
+    int seq;
+};
+
+#endif
