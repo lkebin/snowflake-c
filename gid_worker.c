@@ -7,10 +7,10 @@
 
 #include "snowflake.h"
 
-struct Config {
+typedef struct {
     char *host;
     int port;
-};
+} worker_config_st;
 
 static void *gid(gearman_job_st *job, void *context, size_t *result_size, gearman_return_t *ret_ptr) 
 {
@@ -23,8 +23,8 @@ static void *gid(gearman_job_st *job, void *context, size_t *result_size, gearma
         return NULL;
     }
 
-    sprintf(data, "%"PRIu64, snowflake_id((struct snowflake_st *) context));
-    fprintf(stderr, "GID: %s, TIMESTAMP: %"PRIu64"\n", data, ((struct snowflake_st *)context)->last_timestamp);
+    sprintf(data, "%"PRIu64, snowflake_id((snowflake_st *) context));
+    fprintf(stderr, "GID: %s, TIMESTAMP: %"PRIu64"\n", data, ((snowflake_st *)context)->last_timestamp);
 
     *ret_ptr = GEARMAN_SUCCESS;
     *result_size = strlen(data);
@@ -35,12 +35,12 @@ static void *gid(gearman_job_st *job, void *context, size_t *result_size, gearma
 int main(int argc, char *argv[])
 {
     int opt;
-    struct Config config = {
+    worker_config_st config = {
         .host = "127.0.0.1",
         .port = 4730,
     };
 
-    struct snowflake_st snowflake_st = {
+    snowflake_st snowflake_st = {
         .last_timestamp = 0,
         .datacenter = 1,
         .machine = 1,

@@ -3,7 +3,7 @@
 static uint64_t snowflake_next_timestamp(uint64_t last_timestamp);
 
 /* uint64_t snowflake_id(uint64_t *last_timestamp,int datacenter, int machine, int *seq) */
-uint64_t snowflake_id(struct snowflake_st *snowflake_st)
+uint64_t snowflake_id(snowflake_st *snowflake_st)
 {/*{{{*/
     uint64_t current_timestamp = snowflake_timestamp();
 

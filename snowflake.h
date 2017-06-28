@@ -23,11 +23,11 @@
 uint64_t snowflake_id();
 uint64_t snowflake_timestamp();
 
-struct snowflake_st {
+typedef struct {
     uint64_t last_timestamp;
     int datacenter;
     int machine;
     int seq;
-};
+} snowflake_st;
 
 #endif
