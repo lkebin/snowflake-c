@@ -7,6 +7,9 @@
 
 #include "snowflake.h"
 
+#define ID_MAX_LEN 21
+#define EOS(s) ((s)+strlen(s))
+
 typedef struct {
     char *host;
     int port;
@@ -15,16 +18,40 @@ typedef struct {
 static void *gid(gearman_job_st *job, void *context, size_t *result_size, gearman_return_t *ret_ptr) 
 {
     char *data;
-    data = malloc(21);
+    int nums;
+    const char *workload;
+    uint64_t gid;
+    char *formatString;
+    workload = (const char *)gearman_job_workload(job);
+
+    nums = atoi(workload);
+    if (nums < 1) {
+        nums = 1;
+    }
+
+    fprintf(stdout, "Request numbers: %d\n", nums);
+
+    int dataLength = ID_MAX_LEN * nums + 1;
+
+    data = malloc(dataLength);
     if (data == NULL)
     {
-        printf("malloc result:%d\n", errno);
+        fprintf(stderr, "malloc result:%d\n", errno);
         *ret_ptr= GEARMAN_WORK_FAIL;
         return NULL;
     }
 
-    sprintf(data, "%"PRIu64, snowflake_id((snowflake_st *) context));
-    fprintf(stderr, "GID: %s, TIMESTAMP: %"PRIu64"\n", data, ((snowflake_st *)context)->last_timestamp);
+    int appendLength = 0;
+    for (int i = 0; i < nums; i++) {
+        gid = snowflake_id((snowflake_st *) context);
+        fprintf(stdout, "GID: %"PRIu64", TIMESTAMP: %"PRIu64", NUMS: %d\n", gid, ((snowflake_st *)context)->last_timestamp, i);
+        if (i == (nums-1)) {
+            formatString = "%"PRIu64;
+        } else {
+            formatString = "%"PRIu64",";
+        }
+        appendLength += snprintf(EOS(data), dataLength - appendLength, formatString, gid);
+    }
 
     *ret_ptr = GEARMAN_SUCCESS;
     *result_size = strlen(data);
@@ -88,7 +115,7 @@ int main(int argc, char *argv[])
         ret = gearman_worker_work(&worker);
         if (ret != GEARMAN_SUCCESS)
         {
-            printf("%s\n", gearman_worker_error(&worker));
+            fprintf(stderr, "%s\n", gearman_worker_error(&worker));
             return EXIT_FAILURE;
         }
     }

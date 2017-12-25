@@ -3,7 +3,7 @@ project(gidworker)
 file(GLOB GIDWORKER_SOURCE *.c)
 
 find_package(PkgConfig)
-pkg_check_modules(GEARMAN REQUIRED gearmand)
+pkg_check_modules(GEARMAN REQUIRED gearmand>=1.1.13)
 link_directories(${GEARMAN_LIBRARY_DIRS})
 
 add_executable(${PROJECT_NAME} ${GIDWORKER_SOURCE})
