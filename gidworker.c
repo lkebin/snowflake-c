@@ -15,7 +15,7 @@ typedef struct {
 static void *gid(gearman_job_st *job, void *context, size_t *result_size, gearman_return_t *ret_ptr) 
 {
     char *data;
-    data = malloc(sizeof(uint64_t));
+    data = malloc(21);
     if (data == NULL)
     {
         printf("malloc result:%d\n", errno);
